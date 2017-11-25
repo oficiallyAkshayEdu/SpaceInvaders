@@ -1,0 +1,15 @@
+from imports import *
+
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+
+SI_FONT_LOC = "fonts/spaceFont.ttf"
+SCREEN_WIDTH = 1024
+SCREEN_HEIGHT = 896
+SCREEN = (SCREEN_WIDTH, SCREEN_HEIGHT)
+FPS = 10
+PLAYER_SPEED = 10
+
+
+

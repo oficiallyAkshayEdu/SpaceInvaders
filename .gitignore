@@ -55,3 +55,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+.idea/SpaceInvaders.iml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/preferred-vcs.xml
