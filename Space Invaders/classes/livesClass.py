@@ -1,6 +1,6 @@
 from initializeGame import *
 
-
+# defines livesUpdater
 def updateLives():
     LIVES_SRPITE.empty()
     Lives.initialX = 50
@@ -8,6 +8,7 @@ def updateLives():
         lives = Lives()
         LIVES_SRPITE.add(lives)
 
+# creates Lives sprite area
 class Lives(pygame.sprite.Sprite):
 
     initialX = 50
@@ -25,15 +26,15 @@ class Lives(pygame.sprite.Sprite):
 
     def createRow(self):
         Lives.initialX += self.width
-        print("created)")
+        debugPrint("created)")
 
-
+# creates n number o flives
 for i in range(Lives.lives):
     lives = Lives()
     LIVES_SRPITE.add(lives)
 
+# creates lives counter (number only sprite region
 class LivesCounter(pygame.sprite.Sprite):
-
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = SCORE
@@ -45,22 +46,7 @@ class LivesCounter(pygame.sprite.Sprite):
     def update(self):
         self.image = text_rend(str(Lives.lives), REG_FONT, WHITE)
 
+
+# creates livesCounter object
 livesCounter = LivesCounter()
-
-
-class GameOver(pygame.sprite.Sprite):
-
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = logo_ren
-        self.rect = self.image.get_rect()
-        self.rect.centerx = SCREEN_WIDTH /2
-        self.rect.centery = SCREEN_HEIGHT /2
-        GAMEOVER_SPRITE.add(self)
-
-    def update(self):
-        screen.fill(BLACK)
-        self.image = text_rend("A", SILOGO, WHITE)
-
-gameOver = GameOver()
 

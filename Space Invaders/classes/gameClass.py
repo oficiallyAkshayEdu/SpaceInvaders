@@ -3,10 +3,12 @@ from classes.bulletClass import *
 from classes.invaderClass import *
 from classes.bulletClass import *
 from classes.cannonClass import *
-from classes.barricadeClass import *
+from classes.blockerClass import *
 from classes.mysteryShipClass import *
 from classes.livesClass import *
 
+
+# defiens score class
 class Score(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -21,26 +23,27 @@ class Score(pygame.sprite.Sprite):
     def update(self):
         self.image = text_rend(str(self.PlayerScore), REG_FONT, WHITE)
 
+# creates score object
 score = Score()
 
-class Game():
 
+# main game class and logic
+class Game():
     def __init__(self):
         self.running = True
-        # self.gameOver = True
         self.setup()
-        # self.score = 0
 
     def startGame(self):
         self.main_loop()
 
     def setup(self):
-        self.cannonSetup()
-        self.invader1Setup()
-        self.make_blockers()
+        self.cannonSetup()  # sets up cannon
+        self.invadersSetup()  # sets up invaders
+        self.make_blockers()  # sets up blockers
 
-    def invader1Setup(self):
+    def invadersSetup(self):
 
+        # creates all the required invaders by iterating over two arrays at once
         Invaders.initialX = 100
         InvaderArray = [rowOneInvaders, rowTwoInvaders, rowThreeInvaders]
         InvaderSpriteArray = [INVADERS_ONE_SPRITE, INVADERS_TWO_SPRITE, INVADERS_THREE_SPRITE]
@@ -55,7 +58,7 @@ class Game():
         self.cannon = Cannon()
         CANNON_SPRITE.add(self.cannon)
 
-
+    # main event handler loop
     def eventHandler(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -66,51 +69,55 @@ class Game():
                         self.cannon.shoot()
                     if ALL_INVADERS_SPRITE.sprites():
                         random.choice(ALL_INVADERS_SPRITE.sprites()).shoot()
+            # tried my hand at creating custom events, turns out they were useless
             # if event.type == INVADER_DEAD:
                 # print("successful event")
 
     def main_loop(self):
         while self.running:
-            clock.tick(FPS)
-            self.eventHandler()
-            self.didCannonWin()
-            screen.fill(BLACK)
-            self.isCannonAlive()
-            self.isInvaderAlive()
-            self.wasBlockerHit()
-            self.isLaserAlive()
-            self.isMysteryShipAlive()
-            self.updateSprites()
-            self.drawSprites()
-            pygame.display.flip()
+            clock.tick(FPS)  # runs game at the FPS
+            self.eventHandler()  # runs event handler
+            self.didCannonWin()  # checks if we won the game
+            screen.fill(BLACK)  # paints screen black to start drawing all the stuff
+            self.isCannonAlive() # check if cannon was hit
+            self.isInvaderAlive()  # checks if an inavder was hit
+            self.isLaserAlive()  # checks if the laser was destroyed
+            self.wasBlockerHit()  # check if a blocker was hit
+            self.isMysteryShipAlive()  # checks if the mystery ship is alive
+            self.updateSprites()  # updates ALL spriteGroups
+            self.drawSprites()  # draws all SPRITE groups
+            pygame.display.flip()  # flips display
 
 
     def updateSprites(self):
         for spriteGroup in ALL_SPRITE_GROUPS:
             spriteGroup.update()
-            # print(spriteGroup.sprites())
 
     def drawSprites(self):
         for spriteGroup in ALL_SPRITE_GROUPS:
             spriteGroup.draw(screen)
+
     def didCannonWin(self):
         if not ALL_INVADERS_SPRITE:
             goScreen()
+
     def wasBlockerHit(self):
+        # checks if wither of thse sprites within the sprite groups collided and delets both collided sprites
         blockerGotHit = pygame.sprite.groupcollide(BULLET_SPRITE, BLOCKER_SPRITE, True, True)
 
     def isCannonAlive(self):
-        # print(LIVES_SRPITE, "OG")
+        # if last live used, then clear all sprites so that they dont update anymore and show game over screen
         if Lives.lives == 1:
             cannonGotHit = pygame.sprite.groupcollide(BULLET_SPRITE, CANNON_SPRITE, True, True)
             if cannonGotHit:
                 ALL_SPRITE_GROUPS.clear()
-                goScreen()
+                goScreen()  # shows game over screen
         else:
             cannonGotHit = pygame.sprite.groupcollide(BULLET_SPRITE, CANNON_SPRITE, True, False)
+
+        # for every cannon hit, deduct one life and update live counter etc
         if cannonGotHit:
             for each in cannonGotHit:
-
                 Lives.lives -=1
                 updateLives()
 
@@ -121,12 +128,13 @@ class Game():
         invaderGotHit = pygame.sprite.groupcollide(LASERS_SPRITE, ALL_INVADERS_SPRITE, True, True)
         if invaderGotHit:
             for each in invaderGotHit:
-                for deadInvader in invaderGotHit[each]:
+                for deadInvader in invaderGotHit[each]:  # gets the score value of the pertinent hit invader (row1, row2 or row3) and adds it to the cannon score
                     score.PlayerScore += deadInvader.scoreWorth
+
     def isLaserAlive(self):
         laserHitBlocker = pygame.sprite.groupcollide(LASERS_SPRITE, BLOCKER_SPRITE, True, False)
-    # ablocker = Blocker(10, 4, 9)
 
+    # creates all blockers
     def make_blockers(self):
         for count in range (4):
             initialX = 50 + (count * 250)
@@ -137,7 +145,7 @@ class Game():
                     blocker.rect.y = 680 + (row * blocker.height)
                     BLOCKER_SPRITE.add(blocker)
 
-
+# defines and blits the Game Over screen
 def goScreen():
     ALL_SPRITE_GROUPS.clear()
     screen.fill(BLACK)

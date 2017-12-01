@@ -1,8 +1,7 @@
 from classes.laserClass import *
 from initializeGame import *
 
-
-
+# inherits from Laser, which already inherits pygame sprite class
 class Bullet(Laser):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -12,7 +11,6 @@ class Bullet(Laser):
         self.rect.centerx = x
         self.rect.bottom = y
         self.speedy = +20
-
 
     def update(self):
         self.rect.y += self.speedy

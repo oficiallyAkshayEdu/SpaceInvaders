@@ -6,6 +6,8 @@
 # ignore PyCharm XMl
 *.xml
 *.iml
+*.pyc
+**/*.pyc
 
 # User-specific stuff:
 .idea/**/workspace.xml
